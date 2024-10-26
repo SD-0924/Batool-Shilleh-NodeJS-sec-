@@ -26,4 +26,40 @@ const createFile = (req, res) => {
     })
 }
 
-module.exports = {listFiles, createFile, createFileForm}
+const getFileContent = (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.join(dataDir, filename);
+
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+        if (err) return res.status(404).send("File not found");
+        res.render('detail', { filename, content: data });
+    });
+}
+
+const updateFileName = (req, res) => {
+    const { filename } = req.params;
+    const { newFilename } = req.body;
+    const oldName = path.join(dataDir, filename);
+    const newPath = path.join(dataDir, newFilename);
+
+    fs.rename(oldName, newPath, (err) => {
+        if (err) return res.status(500).send("Error renaming file");
+        res.status(200).json({ message: "File renamed successfully" });
+    });
+}
+
+const deleteFile = (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.join(dataDir, filename);
+
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Error deleting file");
+        }
+        res.redirect('/');
+    });
+}
+
+
+module.exports = {listFiles, createFile, createFileForm, getFileContent, updateFileName, deleteFile}

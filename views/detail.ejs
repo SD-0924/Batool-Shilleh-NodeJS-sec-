@@ -14,7 +14,7 @@
             <input type="text" name="newFilename" placeholder="Rename file" required>
             <button type="submit">Rename</button>
         </form>
-        <form action="/delete/<%= filename %>" method="POST" class="delete-form">
+        <form action="/files/<%= filename %>?_method=DELETE" method="POST" class="delete-form">
             <button type="submit" class="delete-button">Delete File</button>
         </form>
         <a href="/" class="back-link">Back to Files List</a>

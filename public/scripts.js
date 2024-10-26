@@ -6,7 +6,7 @@ if (renameForm) {
         const filename = renameForm.getAttribute("data-filename");
 
         try {
-            const response = await fetch(`/files/${filename}`, {
+            const response = await fetch(`/update/${filename}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -27,6 +27,7 @@ if (renameForm) {
         }
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll("form[action^='/delete'] button")
