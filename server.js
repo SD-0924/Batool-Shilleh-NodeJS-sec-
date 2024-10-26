@@ -5,7 +5,7 @@ const { logRequist, handle404 } = require('./middleware/loggingMiddleware')
 const fileRoutes = require('./routes/fileRoutes')
 
 const app= express()
-const PORT = 4000 
+const PORT = 5000 
 
 app.use(logRequist);
 app.use(express.urlencoded({ extended: true }))

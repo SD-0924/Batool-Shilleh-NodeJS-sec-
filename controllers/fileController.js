@@ -16,20 +16,14 @@ const createFileForm = (req, res) => {
 
 
 const createFile = (req, res) => {
-    console.log('Request body:', req.body); 
+    console.log('Request body:', req.body);
+    const {filename, content} = req.body
+    const filePath = path.join(dataDir, filename)
 
-    const { filename, content } = req.body; 
-    if (!filename || !content) {
-        return res.status(400).send('Filename and content are required.');
-    }
-
-    try {
-        const filePath = path.join(dataDir, filename);
-        fs.writeFileSync(filePath, content);
-        res.redirect('/'); 
-    } catch (error) {
-        console.error('Error creating file:', error);
-        res.status(500).send('Error creating file');
+    fs.writeFile(filePath, content, (err) => {
+        if (err) return res.status(500).send("Error creating file")
+        res.redirect('/')
+    })
 }
 
 module.exports = {listFiles, createFile, createFileForm}
