@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload File</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" required>
+            <label>
+                <input type="checkbox" name="compress" id="compress"> Compress file before upload
+            </label>
+            <label>
+                <input type="checkbox" name="encrypt">
+                Encrypt file
+            </label>
+            <button type="submit">Upload</button>
+        </form>
+        <a href="/" class="back-link">Back to Files List</a>
+    </div>
+</body>
+</html>

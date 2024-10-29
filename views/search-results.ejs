@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+    <h1>Search Results</h1>
+    <ul class="file-list">
+        <% if (results.length > 0) { %>
+            <% results.forEach(file => { %>
+                <li>
+                    <a href="/files/<%= file %>"><%= file %></a>
+                    <a href="/download/<%= file %>" class="download-button">
+                         <ion-icon name="cloud-download-outline"></ion-icon>
+                    </a>
+                </li>
+            <% }) %>
+        <% } else { %>
+            <li>No files found.</li>
+        <% } %>
+    </ul>
+</div>
+</body>
+</html>

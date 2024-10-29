@@ -1,9 +1,9 @@
-const renameForm = document.querySelector("#renameForm");
+const renameForm = document.querySelector("#renameForm")
 if (renameForm) {
     renameForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const newFilename = renameForm.querySelector("input[name='newFilename']").value;
-        const filename = renameForm.getAttribute("data-filename");
+        event.preventDefault()
+        const newFilename = renameForm.querySelector("input[name='newFilename']").value
+        const filename = renameForm.getAttribute("data-filename")
 
         try {
             const response = await fetch(`/update/${filename}`, {
@@ -11,21 +11,21 @@ if (renameForm) {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `newFilename=${encodeURIComponent(newFilename)}`, // تأكد من تشفير الاسم
-            });
+                body: `newFilename=${encodeURIComponent(newFilename)}`, 
+            })
 
             if (response.ok) {
-                alert("File renamed successfully!");
-                window.location.href = "/";
+                alert("File renamed successfully!")
+                window.location.href = "/"
             } else {
-                const errorMessage = await response.text(); // الحصول على نص الخطأ
-                alert(`Error renaming file: ${errorMessage}`);
+                const errorMessage = await response.text()
+                alert(`Error renaming file: ${errorMessage}`)
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("An unexpected error occurred.");
+            console.error("Error:", error)
+            alert("An unexpected error occurred.")
         }
-    });
+    })
 }
 
 
@@ -41,45 +41,44 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 document.addEventListener("DOMContentLoaded", () => {
-    const searchForm = document.getElementById("searchForm");
-    const searchResultsModal = document.getElementById("searchResultsModal");
-    const searchResultsList = document.getElementById("searchResultsList");
-    const closeButton = document.querySelector(".close-button");
+    const searchForm = document.getElementById("searchForm")
+    const searchResultsModal = document.getElementById("searchResultsModal")
+    const searchResultsList = document.getElementById("searchResultsList")
+    const closeButton = document.querySelector(".close-button")
 
     searchForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const query = document.getElementById("searchQuery").value;
 
         try {
-            const response = await fetch(`/search?query=${query}`);
+            const response = await fetch(`/search?query=${query}`)
             const results = await response.json();
 
-            // تحديث قائمة نتائج البحث
-            searchResultsList.innerHTML = '';
+            searchResultsList.innerHTML = ''
             if (results.length > 0) {
                 results.forEach(file => {
-                    const listItem = document.createElement("li");
-                    listItem.innerHTML = `<a href="/files/${file}">${file}</a>`;
-                    searchResultsList.appendChild(listItem);
+                    const listItem = document.createElement("li")
+                    listItem.innerHTML = `<a href="/files/${file}">${file}</a>`
+                    searchResultsList.appendChild(listItem)
                 });
             } else {
-                searchResultsList.innerHTML = '<li>No files found.</li>';
+                searchResultsList.innerHTML = '<li>No files found.</li>'
             }
 
             
-            searchResultsModal.style.display = "block";
+            searchResultsModal.style.display = "block"
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error:", error)
         }
-    });
+    })
 
     closeButton.addEventListener("click", () => {
-        searchResultsModal.style.display = "none";
-    });
+        searchResultsModal.style.display = "none"
+    })
 
     window.addEventListener("click", (event) => {
         if (event.target === searchResultsModal) {
-            searchResultsModal.style.display = "none";
+            searchResultsModal.style.display = "none"
         }
-    });
-});
+    })
+})

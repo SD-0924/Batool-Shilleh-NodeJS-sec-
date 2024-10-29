@@ -1,53 +1,51 @@
-const request = require('supertest');
-const express = require('express');
-const bodyParser = require('body-parser');
-const { listFiles, createFile, getFileContent, deleteFile } = require('../controllers/fileController');
-const path = require('path')
 const fs = require('fs')
+const path = require('path')
+const { createFile, getFileContent } = require('../controllers/fileController')
+jest.mock('fs')
+jest.mock('crypto')
 
-const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-const DATA_DIR = path.join(__dirname, '../data');
+describe('FileController', () => {
+    const dataDir = path.join(__dirname, '../data')
+    const testFileName = 'testFile.txt'
+    const testFilePath = path.join(dataDir, testFileName)
+    const testContent = 'Hello, world!'
 
-app.get('/', listFiles);
-app.post('/create', createFile);
-app.get('/files/:filename', getFileContent);
-app.delete('/files/:filename', deleteFile);
+    beforeEach(() => {
+        fs.writeFile.mockClear()
+        fs.readFile.mockClear()
+    })
 
-describe('File Controller', () => {
-    afterAll(async () => {
-        // Clean up test file if it was created
-        const fs = require('fs');
-        const path = require('path');
-        const testFilePath = path.join(__dirname, '../data/test.txt');
-        if (fs.existsSync(testFilePath)) {
-            fs.unlinkSync(testFilePath);
+    test('createFile - should create a new file', (done) => {
+        const req = { body: { filename: testFileName, content: testContent } }
+        const res = {
+            redirect: jest.fn(() => done())
         }
-    });
 
-    test('should list files', async () => {
-        const response = await request(app).get('/');
-        expect(response.statusCode).toBe(200);
-    });
+        fs.writeFile.mockImplementation((filePath, content, callback) => {
+            expect(filePath).toBe(testFilePath)
+            expect(content).toBe(testContent)
+            callback(null)
+        })
 
-   /* test('should create a file', async () => {
-        const response = await request(app)
-            .post('/create')
-            .send({ filename: 'test.txt', content: 'Hello, World!' });
-        expect(response.statusCode).toBe(302);
-    });
+        createFile(req, res)
+    })
 
-    test('should get file content', async () => {
-        const response = await request(app).get('/files/test.txt');
-        expect(response.statusCode).toBe(200);
-    });
+    test('getFileContent - should return file content', (done) => {
+        const req = { params: { filename: testFileName } }
+        const res = {
+            render: jest.fn((view, data) => {
+                expect(data.content).toBe(testContent)
+                done()
+            })
+        };
 
-    it('should delete a file on POST /files/:filename', async () => {
-        fs.writeFileSync(path.join(DATA_DIR, 'fileToDelete.txt'), 'Hello, world!');
+        fs.readFile.mockImplementation((filePath, encoding, callback) => {
+            expect(filePath).toBe(testFilePath)
+            expect(encoding).toBe('utf-8')
+            callback(null, testContent)
+        })
 
-        const response = await request(app).post('/files/fileToDelete.txt');
-        expect(response.statusCode).toBe(302); // Check for redirect status
-        expect(fs.existsSync(path.join(DATA_DIR, 'fileToDelete.txt'))).toBe(false);
-    });*/
-});
+        getFileContent(req, res)
+    })
+    
+})

@@ -1,5 +1,4 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 const path = require('path')
 const { logRequist, handle404 } = require('./middleware/loggingMiddleware')
 const fileRoutes = require('./routes/fileRoutes')
@@ -18,4 +17,4 @@ app.use(handle404)
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
-});
+})
